@@ -3,10 +3,12 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.base import router as base_router
 
+
 def create_app() -> FastAPI:
     app = FastAPI(root_path="/api/v1")
+
     app.add_middleware(
-        CORSMiddleware,  # type: ignore
+        CORSMiddleware,
         allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],

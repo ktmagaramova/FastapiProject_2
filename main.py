@@ -2,12 +2,7 @@ import asyncio
 import uvicorn
 
 from app.app import create_app
-from app import models
-from app.database import database
 
-engine = database._engine
-
-models.Base.metadata.create_all(bind=engine)
 app = create_app()
 
 

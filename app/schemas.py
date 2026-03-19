@@ -1,75 +1,97 @@
-from pydantic import BaseModel, SecretStr,ConfigDict
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional
 
-class UserBase(BaseModel):
-    name: str
-    id: int
-    model_config = ConfigDict(from_attributes=True)
 
 class UserCreate(BaseModel):
+    username: str
     password: str
-    name: str
+    email: Optional[str] = ""
+    first_name: Optional[str] = ""
+    last_name: Optional[str] = ""
+
 
 class UserRead(BaseModel):
     id: int
-    name: str
+    username: str
+    email: Optional[str] = ""
+    first_name: Optional[str] = ""
+    last_name: Optional[str] = ""
+    is_active: bool = True
     model_config = ConfigDict(from_attributes=True)
 
-class CategoryBase(BaseModel):
+class CategoryCreate(BaseModel):
     title: str
-    description: Optional[str] = None
-    model_config = ConfigDict(from_attributes=True)
+    description: Optional[str] = ""
+    slug: Optional[str] = None
 
-class CategoryCreate(CategoryBase):
-    pass
 
-class CategoryRead(CategoryBase):
+class CategoryRead(BaseModel):
     id: int
+    title: str
+    description: Optional[str] = ""
+    is_published: bool = True
+    created_at: Optional[datetime] = None
+    slug: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
 
-class LocationBase(BaseModel):
+class LocationCreate(BaseModel):
     name: str
-    model_config = ConfigDict(from_attributes=True)
 
-class LocationCreate(LocationBase):
-    pass
 
-class LocationRead(LocationBase):
+class LocationRead(BaseModel):
     id: int
+    name: str
+    is_published: bool = True
+    created_at: Optional[datetime] = None
     model_config = ConfigDict(from_attributes=True)
 
-class PostBase(BaseModel):
+
+class PostCreate(BaseModel):
     title: str
     text: str
-    pub_date: Optional[datetime]
-    image: Optional[str]
-    model_config = ConfigDict(from_attributes=True)
-
-
-class PostCreate(PostBase):
+    pub_date: datetime
     author_id: int
-    location_id: int
-    category_id: int
+    category_id: Optional[int] = None
+    location_id: Optional[int] = None
+    image: Optional[str] = None
 
 
-class PostRead(PostBase):
+class PostUpdate(BaseModel):
+    title: Optional[str] = None
+    text: Optional[str] = None
+    pub_date: Optional[datetime] = None
+    image: Optional[str] = None
+    category_id: Optional[int] = None
+    location_id: Optional[int] = None
+
+
+class PostRead(BaseModel):
     id: int
-    author: UserRead
-    location: LocationBase
-    category: CategoryBase
-    model_config = ConfigDict(from_attributes=True)
-
-
-class CommentBase(BaseModel):
+    title: str
     text: str
-    created_at: Optional[datetime]
+    pub_date: datetime
+    is_published: bool = True
+    created_at: Optional[datetime] = None
+    image: Optional[str] = None
+    author: UserRead
+    category: Optional[CategoryRead] = None
+    location: Optional[LocationRead] = None
     model_config = ConfigDict(from_attributes=True)
 
 
-class CommentRead(CommentBase):
+class CommentCreate(BaseModel):
+    text: str
+    post_id: int
+    author_id: int
+
+
+class CommentRead(BaseModel):
     id: int
+    text: str
+    created_at: Optional[datetime] = None
+    is_published: bool = True
     author: UserRead
     post_id: int
     model_config = ConfigDict(from_attributes=True)
