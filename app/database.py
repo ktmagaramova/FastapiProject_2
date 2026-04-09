@@ -1,13 +1,16 @@
+import os
 from contextlib import contextmanager
 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class Database:
     def __init__(self):
-        self._db_url = "sqlite:///./app/db.sqlite3"
+        self._db_url = os.getenv("DATABASE_URL")
         self._engine = create_engine(self._db_url)
 
     @contextmanager
